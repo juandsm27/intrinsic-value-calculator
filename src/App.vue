@@ -1660,184 +1660,154 @@ export default {
 </script>
 
 <style>
+  :root {
+    --bg: #08080e;
+    --bg2: #0f0f18;
+    --bg3: #14141e;
+    --border: rgba(255,255,255,0.07);
+    --border-bright: rgba(255,255,255,0.15);
+    --text: #eeeef6;
+    --muted: #6b6b80;
+    --accent: #7c6af7;
+    --accent2: #4ed8c0;
+    --accent3: #f06fba;
+  }
+
+  body { background: var(--bg) !important; }
+
+  .v-application { background: var(--bg) !important; font-family: 'Syne', sans-serif !important; }
+
   input {
-    font-family: 'Barlow' !important;
-    background-color: #fff !important;
-    color: #666 !important;
+    font-family: 'Syne', sans-serif !important;
+    color: var(--text) !important;
+    background-color: transparent !important;
   }
-  .v-select .v-select__selection-text {
-    font-family: 'Barlow';
-  }
-  .readonly .v-field__input {   
-    background-color: #f8f8f8 !important;
-  }
-  .readonly input {   
-    background-color: #f8f8f8 !important;
-    display: none !important;
-  }
-  .tabtext {
-    color: rgb(181, 73, 20);    
-    margin-top: 50px;
-  }
-  .monthly-payment-line {
-    width: 40px;
-    border-width: 2px !important;
-    margin-bottom: 5px !important;
-    background-color: rgb(182, 71, 12);
-    border-color: rgb(182, 71, 12);
-    opacity: 0 !important;
-    margin-top: 20px;
-  }
-  .monthly-payment-line-title {
-    width: 40px;
-    border-width: 2px !important;
-    margin-bottom: 25px !important;
-    background-color: rgb(182, 71, 12) !important;
-    border-color: rgb(182, 71, 12) !important;
-    opacity: initial !important;
-    margin-top: 20px !important;
-  }
-  .monthly-payment-title {
-    text-transform: uppercase !important;
-    font-weight: bold;
-    color: rgb(182, 71, 12) !important;
-    font-size: 18px;
-    margin-bottom: 20px !important;
-  }
-  .titlepie {
-    text-transform: uppercase !important;
-    margin-bottom: -20px;
-    font-family: "Barlow", !important;
-    text-transform: uppercase;
-    font-weight: 700;
-    font-size: 18px;
-    line-height: 2rem;
-    color: #666 !important;
-    padding: 0px !important;
-  }
+
+  .v-select .v-select__selection-text { font-family: 'Syne', sans-serif !important; color: var(--text) !important; }
+
   .monthly-payment-mount {
-    font-family: "Barlow", !important;
-    font-weight: 700 !important;
-    font-size: 40px;
-    color: #666 !important;
+    font-family: 'Raleway', sans-serif !important;
+    font-weight: 800 !important;
+    font-size: 2.2rem !important;
+    color: var(--text) !important;
+    line-height: 1.1 !important;
   }
-  .monthly-payment-mount h1::after {
-    position: absolute;
-        content: '';
-        height: 200px;
-        bottom: -4px; 
-        width: 100px;
-        color: black;
+
+  .monthly-payment-title {
+    font-family: 'Space Mono', monospace !important;
+    text-transform: uppercase !important;
+    font-weight: 400 !important;
+    font-size: 11px !important;
+    letter-spacing: 0.12em !important;
+    color: var(--muted) !important;
+    margin-bottom: 1rem !important;
+    margin-top: 4px !important;
   }
-  .calculator-investment{
-  line-height: 0.5em;
+
+  .monthly-payment-line {
+    width: 32px !important;
+    border-width: 2px !important;
+    margin-bottom: 6px !important;
+    margin-top: 12px !important;
+    background: linear-gradient(90deg, var(--accent), var(--accent2)) !important;
+    border-color: transparent !important;
+    opacity: 1 !important;
   }
-  .chartWrapper {
-  width: 100%;
-  height: 500px;
-  }
-  .v-table table tr:hover {
-  background-color: #999 !important;
-  color: #fff !important;
-  }
-  .v-container {
-    max-width: 100% !important;
-    margin: auto !important;
-    padding: auto !important;
-  }
-  .v-tooltip span{
-    font-size: 17px;
-  }
-  .col-style {
-    padding-bottom: 0 !important;
-    padding-top: 0 !important;
-  }
-  .v-tab__slider {
-    height: 6px !important;
-  }
-  .v-field__input {
-    max-height: 44px !important;
-  }
-  .boton {
-    width: 32% !important; 
-    margin:auto;
-    background-color: rgb(182, 71, 12) !important;
-    color: white !important;
-  }  
-  .boton:hover {
-    background-color: #4b4b4b !important;
-  }
-  .boton2 {
-    width: 32% !important; 
-    background-color: #4b4b4b !important;
-    color: white !important;
-  }  
-  .botongroup {
-    display: flex;
-    justify-content: center;
-  }
-  .boton2:hover {
-    background-color: rgb(182, 71, 12) !important;
-  }
-  .divisor {
-    width: 40px;
+
+  .monthly-payment-line-title {
+    width: 32px !important;
     border-width: 2px !important;
     margin-bottom: 20px !important;
-    opacity: initial !important;
+    margin-top: 8px !important;
+    background: linear-gradient(90deg, var(--accent), var(--accent2)) !important;
+    border-color: transparent !important;
+    opacity: 1 !important;
   }
-  .pegajoso {
-    position: sticky;
-    top: 45px;
+
+  .titlepie {
+    font-family: 'Raleway', sans-serif !important;
+    text-transform: uppercase !important;
+    font-weight: 800 !important;
+    font-size: 12px !important;
+    letter-spacing: 0.18em !important;
+    color: var(--muted) !important;
+    margin-bottom: -20px !important;
   }
-  .botones {
-    margin: auto;
+
+  .v-card { background: var(--bg2) !important; border: 1px solid var(--border) !important; box-shadow: none !important; }
+
+  .v-tabs { background: var(--bg3) !important; border-bottom: 1px solid var(--border) !important; }
+
+  .v-tab {
+    font-family: 'Space Mono', monospace !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    color: var(--muted) !important;
   }
-  .v-table td {
-    text-align: center;
-    font-size: 16px;
+
+  .v-tab--selected { color: var(--accent2) !important; }
+
+  .v-tab__slider {
+    background: linear-gradient(90deg, var(--accent), var(--accent2)) !important;
+    height: 2px !important;
   }
-  .v-table tr{
-    text-align: center;
-    font-size: 16px;
-  }
-  .v-table th{
-    text-align: center;
+
+  .v-table { background: var(--bg2) !important; color: var(--text) !important; }
+
+  .v-table thead tr th, .v-table th {
+    font-family: 'Space Mono', monospace !important;
+    font-size: 10px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    color: var(--muted) !important;
+    background: var(--bg3) !important;
+    border-bottom: 1px solid var(--border) !important;
+    text-align: center !important;
     width: 150px !important;
-    font-size: 16px;
   }
-  .derecha {
-    text-align: right !important;
-  }    
-  .underline {
-    text-decoration: none;   
-    position: relative;  
-  }   
-  .underline2 {
-    text-decoration: none;   
-    position: relative;  
+
+  .v-table tbody tr td, .v-table td, .v-table tr {
+    font-family: 'Syne', sans-serif !important;
+    font-size: 13px !important;
+    color: var(--text) !important;
+    border-bottom: 1px solid var(--border) !important;
+    text-align: center !important;
   }
+
+  .v-table tbody tr:hover td { background: rgba(124,106,247,0.08) !important; }
+
+  .v-table table tr:hover { background-color: rgba(124,106,247,0.08) !important; color: var(--text) !important; }
+
+  .calculator-investment { line-height: 0.5em; }
+
+  .col-style { padding-bottom: 0 !important; padding-top: 0 !important; }
+
+  .v-field__input { max-height: 44px !important; }
+
+  .derecha { text-align: right !important; }
+
+  .underline, .underline2 { text-decoration: none; position: relative; }
+
   .underline:after {
-    position: absolute;
-    content: '';
-    height: 5px;
-    bottom: 15px;
-    margin: 0 auto;
-    left: 0px;
-    right: 50;
-    width: 40px;
-    background: rgb(182, 71, 12);
-    }	 
-  .underline2:after {
-    position: absolute;
-    content: '';
-    height: 5px;
-    bottom: 15px;
-    margin: 0 auto;
-    width: 40px;
-    right: 100px;
-    background: rgb(182, 71, 12);
+    position: absolute; content: ''; height: 3px;
+    bottom: 12px; left: 0; width: 32px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
   }
-  .v-table--density-default > .v-table__wrapper > table > tbody > tr > td, .v-table--density-default > .v-table__wrapper > table > thead > tr > td, .v-table--density-default > .v-table__wrapper > table > tfoot > tr > td {
+
+  .underline2:after {
+    position: absolute; content: ''; height: 3px;
+    bottom: 12px; right: 0; width: 32px;
+    background: linear-gradient(90deg, var(--accent3), var(--accent));
+  }
+
+  .pegajoso { position: sticky; top: 45px; }
+
+  .botones { margin: auto; }
+
+  .v-table--density-default > .v-table__wrapper > table > tbody > tr > td,
+  .v-table--density-default > .v-table__wrapper > table > thead > tr > td,
+  .v-table--density-default > .v-table__wrapper > table > tfoot > tr > td {
     height: 40px !important;
   }
 </style>
