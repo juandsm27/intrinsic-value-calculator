@@ -15,18 +15,15 @@
                   <v-autocomplete
                     density="compact"
                     v-model="selectedStock"
-                    v-model:search="stockSearchQuery"
-                    :items="stockSearchResults"
+                    :items="stockList"
                     :loading="stockLoading"
-                    label="Nombre"
+                    label="Nombre (ej. AAPL, TSLA)"
                     variant="outlined"
                     item-title="displayName"
                     item-value="symbol"
                     @update:modelValue="onStockSelect"
-                    :no-filter="true"
                     return-object
                     clearable
-                    hide-no-data
                   ></v-autocomplete>
                 </v-col>
             </v-col>
@@ -392,10 +389,108 @@ export default {
       tab3: null,
       name: '',
       selectedStock: null,
-      stockSearchQuery: '',
-      stockSearchResults: [],
       stockLoading: false,
-      stockSearchTimeout: null,
+      stockList: [
+        { symbol: 'AAPL',  displayName: 'AAPL – Apple' },
+        { symbol: 'MSFT',  displayName: 'MSFT – Microsoft' },
+        { symbol: 'GOOGL', displayName: 'GOOGL – Alphabet' },
+        { symbol: 'AMZN',  displayName: 'AMZN – Amazon' },
+        { symbol: 'NVDA',  displayName: 'NVDA – NVIDIA' },
+        { symbol: 'META',  displayName: 'META – Meta Platforms' },
+        { symbol: 'TSLA',  displayName: 'TSLA – Tesla' },
+        { symbol: 'BRK.B', displayName: 'BRK.B – Berkshire Hathaway' },
+        { symbol: 'JPM',   displayName: 'JPM – JPMorgan Chase' },
+        { symbol: 'V',     displayName: 'V – Visa' },
+        { symbol: 'UNH',   displayName: 'UNH – UnitedHealth' },
+        { symbol: 'XOM',   displayName: 'XOM – Exxon Mobil' },
+        { symbol: 'LLY',   displayName: 'LLY – Eli Lilly' },
+        { symbol: 'JNJ',   displayName: 'JNJ – Johnson & Johnson' },
+        { symbol: 'MA',    displayName: 'MA – Mastercard' },
+        { symbol: 'AVGO',  displayName: 'AVGO – Broadcom' },
+        { symbol: 'PG',    displayName: 'PG – Procter & Gamble' },
+        { symbol: 'HD',    displayName: 'HD – Home Depot' },
+        { symbol: 'COST',  displayName: 'COST – Costco' },
+        { symbol: 'MRK',   displayName: 'MRK – Merck' },
+        { symbol: 'ABBV',  displayName: 'ABBV – AbbVie' },
+        { symbol: 'CVX',   displayName: 'CVX – Chevron' },
+        { symbol: 'ORCL',  displayName: 'ORCL – Oracle' },
+        { symbol: 'AMD',   displayName: 'AMD – AMD' },
+        { symbol: 'WMT',   displayName: 'WMT – Walmart' },
+        { symbol: 'BAC',   displayName: 'BAC – Bank of America' },
+        { symbol: 'KO',    displayName: 'KO – Coca-Cola' },
+        { symbol: 'PEP',   displayName: 'PEP – PepsiCo' },
+        { symbol: 'NFLX',  displayName: 'NFLX – Netflix' },
+        { symbol: 'CRM',   displayName: 'CRM – Salesforce' },
+        { symbol: 'TMO',   displayName: 'TMO – Thermo Fisher' },
+        { symbol: 'ACN',   displayName: 'ACN – Accenture' },
+        { symbol: 'MCD',   displayName: 'MCD – McDonald\'s' },
+        { symbol: 'WFC',   displayName: 'WFC – Wells Fargo' },
+        { symbol: 'LIN',   displayName: 'LIN – Linde' },
+        { symbol: 'ABT',   displayName: 'ABT – Abbott' },
+        { symbol: 'DHR',   displayName: 'DHR – Danaher' },
+        { symbol: 'ADBE',  displayName: 'ADBE – Adobe' },
+        { symbol: 'CSCO',  displayName: 'CSCO – Cisco' },
+        { symbol: 'TXN',   displayName: 'TXN – Texas Instruments' },
+        { symbol: 'QCOM',  displayName: 'QCOM – Qualcomm' },
+        { symbol: 'INTC',  displayName: 'INTC – Intel' },
+        { symbol: 'IBM',   displayName: 'IBM – IBM' },
+        { symbol: 'GS',    displayName: 'GS – Goldman Sachs' },
+        { symbol: 'MS',    displayName: 'MS – Morgan Stanley' },
+        { symbol: 'RTX',   displayName: 'RTX – Raytheon' },
+        { symbol: 'CAT',   displayName: 'CAT – Caterpillar' },
+        { symbol: 'BA',    displayName: 'BA – Boeing' },
+        { symbol: 'GE',    displayName: 'GE – GE Aerospace' },
+        { symbol: 'HON',   displayName: 'HON – Honeywell' },
+        { symbol: 'UPS',   displayName: 'UPS – UPS' },
+        { symbol: 'SBUX',  displayName: 'SBUX – Starbucks' },
+        { symbol: 'AMGN',  displayName: 'AMGN – Amgen' },
+        { symbol: 'GILD',  displayName: 'GILD – Gilead Sciences' },
+        { symbol: 'BMY',   displayName: 'BMY – Bristol-Myers Squibb' },
+        { symbol: 'PFE',   displayName: 'PFE – Pfizer' },
+        { symbol: 'T',     displayName: 'T – AT&T' },
+        { symbol: 'VZ',    displayName: 'VZ – Verizon' },
+        { symbol: 'CMCSA', displayName: 'CMCSA – Comcast' },
+        { symbol: 'DIS',   displayName: 'DIS – Disney' },
+        { symbol: 'NKE',   displayName: 'NKE – Nike' },
+        { symbol: 'SPOT',  displayName: 'SPOT – Spotify' },
+        { symbol: 'UBER',  displayName: 'UBER – Uber' },
+        { symbol: 'LYFT',  displayName: 'LYFT – Lyft' },
+        { symbol: 'ABNB',  displayName: 'ABNB – Airbnb' },
+        { symbol: 'SNAP',  displayName: 'SNAP – Snap' },
+        { symbol: 'PINS',  displayName: 'PINS – Pinterest' },
+        { symbol: 'COIN',  displayName: 'COIN – Coinbase' },
+        { symbol: 'HOOD',  displayName: 'HOOD – Robinhood' },
+        { symbol: 'SQ',    displayName: 'SQ – Block' },
+        { symbol: 'PYPL',  displayName: 'PYPL – PayPal' },
+        { symbol: 'SHOP',  displayName: 'SHOP – Shopify' },
+        { symbol: 'PLTR',  displayName: 'PLTR – Palantir' },
+        { symbol: 'SNOW',  displayName: 'SNOW – Snowflake' },
+        { symbol: 'PATH',  displayName: 'PATH – UiPath' },
+        { symbol: 'ZM',    displayName: 'ZM – Zoom' },
+        { symbol: 'DOCU',  displayName: 'DOCU – DocuSign' },
+        { symbol: 'NOW',   displayName: 'NOW – ServiceNow' },
+        { symbol: 'DDOG',  displayName: 'DDOG – Datadog' },
+        { symbol: 'NET',   displayName: 'NET – Cloudflare' },
+        { symbol: 'CRWD',  displayName: 'CRWD – CrowdStrike' },
+        { symbol: 'ZS',    displayName: 'ZS – Zscaler' },
+        { symbol: 'PANW',  displayName: 'PANW – Palo Alto Networks' },
+        { symbol: 'FTNT',  displayName: 'FTNT – Fortinet' },
+        { symbol: 'MU',    displayName: 'MU – Micron' },
+        { symbol: 'AMAT',  displayName: 'AMAT – Applied Materials' },
+        { symbol: 'LRCX',  displayName: 'LRCX – Lam Research' },
+        { symbol: 'KLAC',  displayName: 'KLAC – KLA Corp' },
+        { symbol: 'ASML',  displayName: 'ASML – ASML' },
+        { symbol: 'TSM',   displayName: 'TSM – TSMC' },
+        { symbol: 'BABA',  displayName: 'BABA – Alibaba' },
+        { symbol: 'JD',    displayName: 'JD – JD.com' },
+        { symbol: 'PDD',   displayName: 'PDD – PDD Holdings' },
+        { symbol: 'SE',    displayName: 'SE – Sea Limited' },
+        { symbol: 'MELI',  displayName: 'MELI – MercadoLibre' },
+        { symbol: 'NU',    displayName: 'NU – Nubank' },
+        { symbol: 'VALE',  displayName: 'VALE – Vale' },
+        { symbol: 'PBR',   displayName: 'PBR – Petrobras' },
+        { symbol: 'ITUB',  displayName: 'ITUB – Itaú Unibanco' },
+      ],
       casoBaseTotalShow: 0,
       casoBaseTotal: 0,
       precio: 0, 
@@ -440,49 +535,7 @@ export default {
       chartDataNegPrincipal: [],
     };
   },
-  watch: {
-    stockSearchQuery(val) {
-      if (!val || val.length < 1) return;
-      if (this.selectedStock && val === this.selectedStock.displayName) return;
-      clearTimeout(this.stockSearchTimeout);
-      this.stockSearchTimeout = setTimeout(async () => {
-        this.stockLoading = true;
-        try {
-          const apiKey = process.env.VUE_APP_FINNHUB_KEY;
-          const res = await fetch(`https://finnhub.io/api/v1/search?q=${encodeURIComponent(val)}&token=${apiKey}`);
-          const data = await res.json();
-          this.stockSearchResults = (data.result || [])
-            .filter(s => s.type === 'Common Stock')
-            .slice(0, 10)
-            .map(s => ({ symbol: s.symbol, description: s.description, displayName: `${s.symbol} – ${s.description}` }));
-        } catch {
-          this.stockSearchResults = [];
-        }
-        this.stockLoading = false;
-      }, 400);
-    },
-  },
   methods: {
-
-    onStockSearch(query) {
-      if (!query || query.length < 1) return;
-      clearTimeout(this.stockSearchTimeout);
-      this.stockSearchTimeout = setTimeout(async () => {
-        this.stockLoading = true;
-        try {
-          const apiKey = process.env.VUE_APP_FINNHUB_KEY;
-          const res = await fetch(`https://finnhub.io/api/v1/search?q=${encodeURIComponent(query)}&token=${apiKey}`);
-          const data = await res.json();
-          this.stockSearchResults = (data.result || [])
-            .filter(s => s.type === 'Common Stock')
-            .slice(0, 10)
-            .map(s => ({ symbol: s.symbol, description: s.description, displayName: `${s.symbol} – ${s.description}` }));
-        } catch {
-          this.stockSearchResults = [];
-        }
-        this.stockLoading = false;
-      }, 400);
-    },
 
     async onStockSelect(stock) {
       if (!stock) return;
