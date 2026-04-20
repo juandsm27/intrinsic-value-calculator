@@ -12,7 +12,22 @@
           <v-col cols="12" md="6">
             <v-col class="col-style" cols="12">
                 <v-col class="col-style">
-                  <v-text-field density="compact" type="text" v-model.number="name" label="Nombre" variant="outlined" @input="onChange($event)"></v-text-field>
+                  <v-autocomplete
+                    density="compact"
+                    v-model="selectedStock"
+                    :items="stockSearchResults"
+                    :loading="stockLoading"
+                    label="Nombre"
+                    variant="outlined"
+                    item-title="displayName"
+                    item-value="symbol"
+                    @update:search="onStockSearch"
+                    @update:modelValue="onStockSelect"
+                    :no-filter="true"
+                    return-object
+                    clearable
+                    hide-no-data
+                  ></v-autocomplete>
                 </v-col>
             </v-col>
             <v-col class="col-style" cols="12">
@@ -376,6 +391,10 @@ export default {
       tab2: null,
       tab3: null,
       name: '',
+      selectedStock: null,
+      stockSearchResults: [],
+      stockLoading: false,
+      stockSearchTimeout: null,
       casoBaseTotalShow: 0,
       casoBaseTotal: 0,
       precio: 0, 
@@ -421,7 +440,43 @@ export default {
     };
   },
   methods: {
-    
+
+    onStockSearch(query) {
+      if (!query || query.length < 1) return;
+      clearTimeout(this.stockSearchTimeout);
+      this.stockSearchTimeout = setTimeout(async () => {
+        this.stockLoading = true;
+        try {
+          const apiKey = process.env.VUE_APP_FINNHUB_KEY;
+          const res = await fetch(`https://finnhub.io/api/v1/search?q=${encodeURIComponent(query)}&token=${apiKey}`);
+          const data = await res.json();
+          this.stockSearchResults = (data.result || [])
+            .filter(s => s.type === 'Common Stock')
+            .slice(0, 10)
+            .map(s => ({ symbol: s.symbol, description: s.description, displayName: `${s.symbol} – ${s.description}` }));
+        } catch {
+          this.stockSearchResults = [];
+        }
+        this.stockLoading = false;
+      }, 400);
+    },
+
+    async onStockSelect(stock) {
+      if (!stock) return;
+      this.name = stock.description;
+      try {
+        const apiKey = process.env.VUE_APP_FINNHUB_KEY;
+        const res = await fetch(`https://finnhub.io/api/v1/quote?symbol=${stock.symbol}&token=${apiKey}`);
+        const data = await res.json();
+        if (data.c && data.c > 0) {
+          this.precio = data.c;
+          this.onChange();
+        }
+      } catch {
+        // price fetch failed, user can enter manually
+      }
+    },
+
     onChange() {
       if (
         this.precio !== "" &&
