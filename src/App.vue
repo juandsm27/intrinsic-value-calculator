@@ -15,13 +15,13 @@
                   <v-autocomplete
                     density="compact"
                     v-model="selectedStock"
+                    v-model:search="stockSearchQuery"
                     :items="stockSearchResults"
                     :loading="stockLoading"
                     label="Nombre"
                     variant="outlined"
                     item-title="displayName"
                     item-value="symbol"
-                    @update:search="onStockSearch"
                     @update:modelValue="onStockSelect"
                     :no-filter="true"
                     return-object
@@ -392,6 +392,7 @@ export default {
       tab3: null,
       name: '',
       selectedStock: null,
+      stockSearchQuery: '',
       stockSearchResults: [],
       stockLoading: false,
       stockSearchTimeout: null,
@@ -439,6 +440,28 @@ export default {
       chartDataNegPrincipal: [],
     };
   },
+  watch: {
+    stockSearchQuery(val) {
+      if (!val || val.length < 1) return;
+      if (this.selectedStock && val === this.selectedStock.displayName) return;
+      clearTimeout(this.stockSearchTimeout);
+      this.stockSearchTimeout = setTimeout(async () => {
+        this.stockLoading = true;
+        try {
+          const apiKey = process.env.VUE_APP_FINNHUB_KEY;
+          const res = await fetch(`https://finnhub.io/api/v1/search?q=${encodeURIComponent(val)}&token=${apiKey}`);
+          const data = await res.json();
+          this.stockSearchResults = (data.result || [])
+            .filter(s => s.type === 'Common Stock')
+            .slice(0, 10)
+            .map(s => ({ symbol: s.symbol, description: s.description, displayName: `${s.symbol} – ${s.description}` }));
+        } catch {
+          this.stockSearchResults = [];
+        }
+        this.stockLoading = false;
+      }, 400);
+    },
+  },
   methods: {
 
     onStockSearch(query) {
@@ -464,16 +487,27 @@ export default {
     async onStockSelect(stock) {
       if (!stock) return;
       this.name = stock.description;
+      const apiKey = process.env.VUE_APP_FINNHUB_KEY;
       try {
-        const apiKey = process.env.VUE_APP_FINNHUB_KEY;
-        const res = await fetch(`https://finnhub.io/api/v1/quote?symbol=${stock.symbol}&token=${apiKey}`);
-        const data = await res.json();
-        if (data.c && data.c > 0) {
-          this.precio = data.c;
-          this.onChange();
+        const [quoteRes, metricsRes] = await Promise.all([
+          fetch(`https://finnhub.io/api/v1/quote?symbol=${stock.symbol}&token=${apiKey}`),
+          fetch(`https://finnhub.io/api/v1/stock/metric?symbol=${stock.symbol}&metric=all&token=${apiKey}`),
+        ]);
+        const [quote, metrics] = await Promise.all([quoteRes.json(), metricsRes.json()]);
+
+        if (quote.c && quote.c > 0) {
+          this.precio = quote.c;
         }
+        const eps = metrics?.metric?.epsTTM ?? metrics?.metric?.epsNormalizedAnnual;
+        if (eps && eps > 0) {
+          this.metrica = parseFloat(eps.toFixed(2));
+        }
+        if (!this.descuento || this.descuento === 0) {
+          this.descuento = 10;
+        }
+        this.onChange();
       } catch {
-        // price fetch failed, user can enter manually
+        // fetch failed, user can enter manually
       }
     },
 
